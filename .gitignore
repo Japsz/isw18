@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+.idea/workspace.xml
+.idea/isw18.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/vcs.xml

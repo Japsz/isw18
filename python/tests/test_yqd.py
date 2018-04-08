@@ -16,9 +16,11 @@ def load_quote(ticker,desde,hasta):
 
 def test(ticker,desde,hasta):
 	# Download quote for stocks
-	for string in load_quote(ticker,desde,hasta):
+	quotes = load_quote(ticker,desde,hasta)
+	for string in quote:
 	    print(string)
-	    array = string.split(",")
+
+def parser(str):
 
 
 

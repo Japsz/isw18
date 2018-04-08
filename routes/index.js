@@ -31,7 +31,6 @@ router.post('/get_quote',function(req, res, next){
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-        console.log('finished');
         console.log(texto);
         res.render('stock_rows',{data: texto});
 

@@ -82,7 +82,7 @@
                 <input type="date" class="form-control" name="desde" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
                 <label for="hasta">Hasta</label>
                 <input type="date" class="form-control" name="hasta" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
-                <button type="submit" class="btn btn-green" style="margin-left:5px"><span class="glyphicon glyphicon-search"></span></button>
+                <button type="submit" class="btn btn-green" style="margin-left:5px" id="fsubmit"><span class="glyphicon glyphicon-search"></span></button>
               </div>
             </div>
           </div>
@@ -114,6 +114,7 @@
 <script type="text/javascript">
   $("#busq_stock").submit(function(e){
       e.preventDefault();
+      $("#fsubmit").html("Cargando ...");
       var array = $(this).serializeArray();
       var data = {};
       console.log(array);
@@ -126,6 +127,7 @@
               data: data,
               url: '/get_quote',
               success: function(data){
+                  $("#fsubmit").html('<span class="glyphicon glyphicon-search"></span>');
                   $("#stock_rows").html(data);
               }
           });

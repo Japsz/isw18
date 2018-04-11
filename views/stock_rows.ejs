@@ -1,12 +1,31 @@
-<% for(var i = 0;i<data.length - 1  ;i++){
-    data[i] = data[i].split(",");%>
-  <tr>
-      <td><%= data[i][0]%></td>
-      <td><%= data[i][1]%></td>
-      <td><%= data[i][2]%></td>
-      <td><%= data[i][3]%></td>
-      <td><%= data[i][4]%></td>
-      <td><%= data[i][5]%></td>
-      <td><%= data[i][6]%></td>
-  </tr>
-<%}%>
+
+<div class="panel-body">
+    <h3>$OdC para el intervalo: <%= opc%></h3>
+    <h3>$Valor futuro promedio: <%= prom%></h3>
+</div>
+<table class="table table-responsive">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Open</th>
+        <th>High</th>
+        <th>Low</th>
+        <th>Close</th>
+        <th>Adjusted Close</th>
+        <th>Volume</th>
+    </tr>
+    <tbody id="stock_rows">
+    <% for(var i = 0;i<data.length - 1  ;i++){
+        data[i] = data[i].split(",");%>
+    <tr>
+        <td><%= data[i][0]%></td>
+        <td><%= data[i][1]%></td>
+        <td><%= data[i][2]%></td>
+        <td><%= data[i][3]%></td>
+        <td><%= data[i][4]%></td>
+        <td><%= data[i][5]%></td>
+        <td><%= data[i][6]%></td>
+    </tr>
+    <%}%>
+    </tbody>
+</table>

@@ -11,13 +11,33 @@ router.post('/get_quote',function(req, res, next){
     var PythonShell = require('python-shell');
     var pyshell = new PythonShell('/python/tests/test_yqd.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
     var texto = [];
+    var caso = "texto";
+    var sd,opc_val,valor_prom;
 // sends a message to the Python script via stdin
 
 
     pyshell.on('message', function (message) {
-        console.log(message);
+        if(message.split("@@").length > 1){
+            caso = message.split("@@")[0];
+        }else{
+            switch(caso){
+                case "texto":
+                    texto.push(message);
+                    break;
+                case "sd":
+                    console.log(message);
+                    break;
+                case "opc":
+                    opc_val = parseFloat(message);
+                    break;
+                case "s_T":
+                    valor_prom = parseFloat(message);
+                    break;
+                default:
+                    break;
+            }
+        }
         // received a message sent from the Python script (a simple "print" statement)
-        texto.push(message);
     });
 
 // end the input stream and allow the process to exit
@@ -31,8 +51,8 @@ router.post('/get_quote',function(req, res, next){
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-        console.log(texto);
-        res.render('stock_rows',{data: texto});
+        console.log(opc_val);
+        res.render('stock_rows',{data: texto,sd:sd,opc:opc_val,prom:valor_prom});
 
     });
 

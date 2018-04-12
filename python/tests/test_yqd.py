@@ -5,7 +5,6 @@ Created on Sat May 20 18:58:59 2017
 @author: c0redumb
 """
 import sys
-import sympy as sm
 import scipy
 import numpy as np
 

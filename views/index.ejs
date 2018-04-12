@@ -70,25 +70,26 @@
         <div class="panel-heading">
           <form id="busq_stock">
             <div class="form-inline">
-              <div class="form-group" style="width:40%">
+              <div class="form-group" style="width:30%">
                 <select name="symbol" class="form-control" id="symselect" required>
-                  <option value="#" disabled selected>Buscar Símbolo</option>
-                  <option value="AAPL">AAPL</option>
+                  <option value="#" disabled>Buscar Símbolo</option>
+                  <option value="AAPL" selected>AAPL</option>
                   <option value="ADRA">ADRA</option>
                 </select>
               </div>
               <div class="form-group" >
                 <label for="desde"><h5>Desde</h5></label>
-                <input type="date" class="form-control" name="desde" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
+                <input type="date" class="form-control" name="desde" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required value="2018-04-02">
                 <label for="hasta"><h5>Hasta</h5></label>
-                <input type="date" class="form-control" name="hasta" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
-                <button type="submit" class="btn btn" style="margin-left:5px; background-color:#428bca" id="fsubmit"><i class="glyphicon glyphicon-search" style="padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></i></button>
+                <input type="date" class="form-control" name="hasta" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required value="2018-04-03">
+                <button type="submit" class="btn btn" style="margin-left:5px; background-color:#428bca" id="fsubmit"><i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></i></button>
               </div>
             </div>
           </form>
         </div>
         <div id="estado"></div>
-        <div id="stock_rows">
+        <div id="value_option"></div>
+        <div id="stock_rows"></div>
           <!--
           <div class="panel-body">
 
@@ -107,7 +108,6 @@
 
           </table>
           -->
-        </div>
       </div>
     </div>
   </div>
@@ -131,7 +131,7 @@
               data: data,
               url: '/get_quote',
               success: function(data){
-                  $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
+                  $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
                   $("#estado").html("");
                   $("#stock_rows").html(data);
               }
@@ -150,11 +150,11 @@
       }
       if(data.valor_contrato){
         $.ajax({
-          type: 'post',
+          type: 'get',
               data: data,
               url: '/get_option',
               success: function(data){
-                  $("#form_opc").html(data.valor_contrato);
+                $("#value_option").html(data);
               }
         });
       }

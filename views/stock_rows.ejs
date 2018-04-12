@@ -4,15 +4,28 @@
     <h5>$Valor futuro promedio: <%= prom%></h5>
 </div>
 <div id="form_opc">
-    <form id="buq_opc">
-        <label for="valor_contrato"><h5>Valor de Acción a Futuro por Contrato</h5></label>
-        <div class="form-inline">
-            <input type="text" class="form-control" name="valor_contrato" style="width:35%" required>
-            <input type="hidden" class="form-control" name="prom" value=<%= prom%>>
-            <input type="hidden" class="form-control" name="dif" value=<%= opc%>>
-            <button type="submit" class="btn btn-submit" style="margin-left:5px" id="fsubmit2"><i class="glyphicon glyphicon-usd" style="font-size:35px;text-shadow:2px 2px 4px #000000"></i></button>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <form id="buq_opc">
+                <div class="row">
+                    <div class="form-group col-sm-4" style="width:30%">
+                        <label for="valor_contrato"><h5>Valor a Futuro por Contrato</h5></label>
+                        <input type="number" class="form-control" name="valor_contrato" min="0" required>
+                    </div>
+                    <input type="hidden" class="form-control" name="prom" value=<%= prom%>>
+                    <div class="form-group col-sm-4" style="width:30%">
+                        <label for="eleccion"><h5>Vende o Compra Acción</h5></label>
+                        <select name="eleccion" class="form-control" id="symselect" required>
+                          <option value="#" disabled selected>Elegir vender o comprar</option>
+                          <option value="compra">Comprar</option>
+                          <option value="vende">Vender</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-submit" style="margin-left:5px;margin-top:30px" id="fsubmit2"><span style="height:40px">Enviar</span></button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 <table class="table table-responsive">
     <thead>

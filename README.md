@@ -1,19 +1,21 @@
 # isw18
-Instalacion(fedora):
+Instalacion:
 
-Dependencias:
-npm install
+FEDORA
 
-Exportar variable de entorno PYTHONPATH:
-export PYTHONPATH=$PYTHONPATH:/home/usuario/lib/python3.6/site-packages/
+	Instalar dependencias:
+	npm install
 
-Agregar el ejecutable de python a la variable path (en node_module/python-shell/index.js):
+	Agregar el ejecutable de python a la variable path (en node_module/python-shell/index.js):
+	var pythonPath = options.pythonPath || 'python3';
 
+	Exportar variable de entorno PYTHONPATH:
+	export PYTHONPATH=$PYTHONPATH:/home/nombre_usuario/lib/python3.6/site-packages/
 
-Instalar paquetes de python:
-python3 setup.py install --prefix=/home/usuario
+	Ejecutar exe de python:
+	python3 setup.py install --prefix=/home/nombre_usuario
 
-Instalar paquetes de numpy y scpi:
-python3 -m pip install --user numpy scipy
+	Instalar paquetes de numpy y scpi:
+	python3 -m pip install --user numpy scipy
 
 Testing:

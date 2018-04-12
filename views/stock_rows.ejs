@@ -1,7 +1,18 @@
 
 <div class="panel-body">
-    <h3>$OdC para el intervalo: <%= opc%></h3>
-    <h3>$Valor futuro promedio: <%= prom%></h3>
+    <h5>$OdC para el intervalo: <%= opc%></h5>
+    <h5>$Valor futuro promedio: <%= prom%></h5>
+</div>
+<div id="form_opc">
+    <form id="buq_opc">
+        <label for="valor_contrato"><h5>Valor de Acción a Futuro por Contrato</h5></label>
+        <div class="form-inline">
+            <input type="text" class="form-control" name="valor_contrato" style="width:35%" required>
+            <input type="hidden" class="form-control" name="prom" value=<%= prom%>>
+            <input type="hidden" class="form-control" name="dif" value=<%= opc%>>
+            <button type="submit" class="btn btn-submit" style="margin-left:5px" id="fsubmit2"><i class="glyphicon glyphicon-usd" style="font-size:35px;text-shadow:2px 2px 4px #000000"></i></button>
+        </div>
+    </form>
 </div>
 <table class="table table-responsive">
     <thead>

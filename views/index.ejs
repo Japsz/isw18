@@ -40,6 +40,7 @@
     <ul class="dropdown clearfix boxed boxed-blue">
       <li class="link-more"><a href="#"><i></i></a></li>
       <li><a class="ajax" data-url=""><span>Acciones</span></a></li>
+      <!--
       <li><a href="#"><span></span></a>
         <ul>
           <li><a href="#">Link 1</a></li>
@@ -53,6 +54,7 @@
           </li>
         </ul>
       </li>
+      -->
       <li class="menu-search">
         <form id="searchForm" class="menu-search-form" method="post">
           <input type="text" name="search" value="" class="menu-search-field" placeholder="Search the website" />
@@ -62,7 +64,7 @@
     </ul>
   </div>
   <div class="container">
-    <h1 class="page-header">Buscar Acciones</h1>
+    <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
     <div class="col-md-12">
       <div class="panel panel-primary">
         <div class="panel-heading">
@@ -76,16 +78,18 @@
                 </select>
               </div>
               <div class="form-group" >
-                <label for="desde">Desde</label>
+                <label for="desde"><h5>Desde</h5></label>
                 <input type="date" class="form-control" name="desde" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
-                <label for="hasta">Hasta</label>
+                <label for="hasta"><h5>Hasta</h5></label>
                 <input type="date" class="form-control" name="hasta" style="width:35%" max="<%=new Date().toLocaleDateString()%>" required>
-                <button type="submit" class="btn btn-green" style="margin-left:5px" id="fsubmit"><span class="glyphicon glyphicon-search"></span></button>
+                <button type="submit" class="btn btn" style="margin-left:5px; background-color:#428bca" id="fsubmit"><i class="glyphicon glyphicon-search" style="padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></i></button>
               </div>
             </div>
           </form>
         </div>
+        <div id="estado"></div>
         <div id="stock_rows">
+          <!--
           <div class="panel-body">
 
           </div>
@@ -102,13 +106,10 @@
             </tr>
 
           </table>
+          -->
         </div>
-
       </div>
     </div>
-
-
-
   </div>
   <!--/ container -->
 </div>
@@ -116,7 +117,8 @@
 <script type="text/javascript">
   $("#busq_stock").submit(function(e){
       e.preventDefault();
-      $("#fsubmit").html("Cargando ...");
+      $("#fsubmit").html("");
+      $("#estado").html('<div id="estado" style="margin: 5px;margin-left:45%"><h3>Cargando ...</h3></div>');
       var array = $(this).serializeArray();
       var data = {};
       console.log(array);
@@ -129,13 +131,35 @@
               data: data,
               url: '/get_quote',
               success: function(data){
-                  $("#fsubmit").html('<span class="glyphicon glyphicon-search"></span>');
+                  $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
+                  $("#estado").html("");
                   $("#stock_rows").html(data);
               }
           });
       }
 
   });
+
+  $("#busq_opc").submit(function(e){
+      e.preventDefault();
+      var array = $(this).serializeArray();
+      var data = {};
+      console.log(array);
+      for(var i = 0;i<array.length;i++){
+          data[array[i]['name']] = array[i]['value'];
+      }
+      if(data.valor_contrato){
+        $.ajax({
+          type: 'post',
+              data: data,
+              url: '/get_option',
+              success: function(data){
+                  $("#form_opc").html(data.valor_contrato);
+              }
+        });
+      }
+  });
+ 
 </script>
 </body>
 </html>

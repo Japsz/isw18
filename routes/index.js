@@ -59,4 +59,45 @@ router.post('/get_quote',function(req, res, next){
 
 });
 
+router.post('/get_option',function(req, res, next){
+    var PythonShell = require('python-shell');
+    var pyshell = new PythonShell('/python/tests/option.py',{args:[req.body.valor_contrato,req.body.prom,req.body.dif]});
+    var texto = [];
+    var caso = "texto";
+// sends a message to the Python script via stdin
+    pyshell.on('message', function (message) {
+        if(message.split("@@").length > 1){
+            caso = message.split("@@")[0];
+        }else{
+            switch(caso){
+                case "texto":
+                    texto.push(message);
+                    break;
+                case "sd":
+                    console.log(message);
+                    break;
+            }
+        }
+        // received a message sent from the Python script (a simple "print" statement)
+    });
+
+// end the input stream and allow the process to exit
+    pyshell.end(function (err,code,signal) {
+        if (err){
+          console.log("Python Error: %s",err);
+          console.log(signal);
+          res.send("ERROR");
+          return;
+        }
+        console.log('The exit code was: ' + code);
+        console.log('The exit signal was: ' + signal);
+        console.log('finished');
+        console.log(opc_val);
+        return;
+
+    });
+
+
+});
+
 module.exports = router;

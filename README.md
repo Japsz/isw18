@@ -15,3 +15,5 @@ python3 setup.py install --prefix=/home/usuario
 
 Instalar paquetes de numpy y scpi:
 python3 -m pip install --user numpy scipy
+
+Testing:

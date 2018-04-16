@@ -5,7 +5,6 @@ Created on Sat May 20 18:58:59 2017
 @author: c0redumb
 """
 import sys
-import sympy as sm
 import scipy
 import numpy as np
 
@@ -75,3 +74,4 @@ def test(ticker,desde,hasta):
 
 if __name__ == '__main__':
 	test(sys.argv[1],sys.argv[2],sys.argv[3])
+

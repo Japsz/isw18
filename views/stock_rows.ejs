@@ -53,3 +53,25 @@
     <%}%>
     </tbody>
 </table>
+
+<script>
+$("#busq_opc").submit(function(e){
+      e.preventDefault();
+      var array = $(this).serializeArray();
+      var data = {};
+      console.log(array);
+      for(var i = 0;i<array.length;i++){
+          data[array[i]['name']] = array[i]['value'];
+      }
+      if(data.valor_contrato){
+        $.ajax({
+          type: 'get',
+              data: data,
+              url: '/get_option',
+              success: function(data){
+                $("#value_option").html(data);
+              }
+        });
+      }
+  });
+  </script>

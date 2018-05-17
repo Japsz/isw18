@@ -75,6 +75,7 @@
                   <option value="#" disabled>Buscar Símbolo</option>
                   <option value="AAPL" selected>AAPL</option>
                   <option value="ADRA">ADRA</option>
+                  <option value="TWX">TWX</option>
                 </select>
               </div>
               <div class="form-group" >
@@ -138,28 +139,8 @@
           });
       }
 
-  });
-
-  $("#busq_opc").submit(function(e){
-      e.preventDefault();
-      var array = $(this).serializeArray();
-      var data = {};
-      console.log(array);
-      for(var i = 0;i<array.length;i++){
-          data[array[i]['name']] = array[i]['value'];
-      }
-      if(data.valor_contrato){
-        $.ajax({
-          type: 'get',
-              data: data,
-              url: '/get_option',
-              success: function(data){
-                $("#value_option").html(data);
-              }
-        });
-      }
-  });
- 
+  }); 
 </script>
+
 </body>
 </html>

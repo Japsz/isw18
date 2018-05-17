@@ -73,6 +73,7 @@
                   <option value="#" disabled selected>Buscar Símbolo</option>
                   <option value="AAPL">AAPL</option>
                   <option value="ADRA">ADRA</option>
+                  <option value="TWX">TWX</option>
                 </select>
               </div>
               <div class="form-group" >
@@ -116,7 +117,7 @@
 <script type="text/javascript">
   $("#busq_stock").submit(function(e){
       e.preventDefault();
-      $("#fsubmit").html("Cargando ...");
+      $("#fsubmit").html("<i class='glyphicon glyphicon-update'></i>");
       var array = $(this).serializeArray();
       var data = {};
       console.log(array);

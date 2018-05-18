@@ -90,7 +90,7 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size:13px;
     font-weight: 300;
-    color:#666;
+    color: black;
     -webkit-font-smoothing: subpixel-antialiased;
 	position:relative;
     background: rgb(0,157,158);
@@ -117,7 +117,7 @@ body {
 	text-shadow: none;
 }
 
-a{color: #3f4b56;}
+a{color: black;}
 
 a:hover,
 a:focus {
@@ -177,7 +177,7 @@ html body * dd.clear {
 
 h1, h2, h3, h4, h5, h6 {
     font-style: italic;
-	color: #3f4b56;
+	color: black;
 	line-height:1.2em;
 	margin-bottom:.8em;
 }
@@ -326,7 +326,7 @@ p{
     margin-bottom:15px;
     cursor:pointer;
     font-weight: 400;
-    color:#3f4b56;
+    color:black;
 }
 .custom-checkbox label:before,
 .custom-radio label:before{

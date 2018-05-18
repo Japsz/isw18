@@ -9,7 +9,7 @@
   <meta name="author" content="">
   <meta name="keywords" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title></title>
+  <title>Option value</title>
 
   <!-- main JS libs -->
   <script src="/js/libs/modernizr.min.js"></script>
@@ -32,15 +32,37 @@
     .gradient {filter: none !important;}
   </style>
   <![endif]-->
+  <style>
+    .loader {
+      border: 4px solid #D3D3D3;
+      border-radius: 50%;
+      border-top: 4px solid #3498db;
+      width: 30px;
+      height: 30px;
+      -webkit-animation: spin 3s linear infinite; /* Safari */
+      animation: spin 3s linear infinite;
+    }
+
+    /* Safari */
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 
 <body>
 <div class="body_wrap">
+  <!--
   <div id="topmenu">
     <ul class="dropdown clearfix boxed boxed-blue">
       <li class="link-more"><a href="#"><i></i></a></li>
-      <li><a class="ajax" data-url=""><span>Acciones</span></a></li>
-      <!--
+      <li><a class="ajax" href="#">Acciones</a></li>
       <li><a href="#"><span></span></a>
         <ul>
           <li><a href="#">Link 1</a></li>
@@ -54,7 +76,6 @@
           </li>
         </ul>
       </li>
-      -->
       <li class="menu-search">
         <form id="searchForm" class="menu-search-form" method="post">
           <input type="text" name="search" value="" class="menu-search-field" placeholder="Search the website" />
@@ -63,11 +84,13 @@
       </li>
     </ul>
   </div>
+  -->
   <div class="container">
     <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
     <div class="col-md-12">
       <div class="panel panel-primary">
         <div class="panel-heading">
+          <!-- FORMULARIO -->
           <form id="busq_stock">
             <div class="form-inline">
               <div class="form-group" style="width:30%">
@@ -88,27 +111,12 @@
             </div>
           </form>
         </div>
-        <div id="estado"></div>
+        <div class="row">
+          <div id="estado"></div>
+          <div id="loader" class=""></div>
+        </div>
         <div id="value_option"></div>
         <div id="stock_rows"></div>
-          <!--
-          <div class="panel-body">
-
-          </div>
-          <table class="table table-responsive">
-            <thead>
-            <tr>
-              <th>Date</th>
-              <th>Open</th>
-              <th>High</th>
-              <th>Low</th>
-              <th>Close</th>
-              <th>Adjusted Close</th>
-              <th>Volume</th>
-            </tr>
-
-          </table>
-          -->
       </div>
     </div>
   </div>
@@ -119,7 +127,8 @@
   $("#busq_stock").submit(function(e){
       e.preventDefault();
       $("#fsubmit").html("");
-      $("#estado").html('<div id="estado" style="margin: 5px;margin-left:45%"><h3>Cargando ...</h3></div>');
+      $("#estado").html('<br><div id="estado" class="col-md-1 col-md-offset-4"><h3>Cargando</h3></div>');
+      $("#loader").removeClass("").addClass("loader col-md-offset-6");
       var array = $(this).serializeArray();
       var data = {};
       console.log(array);
@@ -130,15 +139,15 @@
           $.ajax({
               type: 'post',
               data: data,
-              url: '/get_quote',
+              url: '/get_actions',
               success: function(data){
                   $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
                   $("#estado").html("");
+                  $("#loader").removeClass("loader col-md-offset-6").addClass("");
                   $("#stock_rows").html(data);
               }
           });
       }
-
   }); 
 </script>
 

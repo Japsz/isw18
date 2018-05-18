@@ -13,7 +13,7 @@ from yahoo_quote_download import yqd
 def load_quote(ticker,desde,hasta):
 	return yqd.load_yahoo_quote(ticker, desde, hasta)[1:-1]
 
-def simular(valor,deltat,r,sigma,restantes): # Hace una simulación recursiva hasta el último valor t (no quedan números aleatorios)
+# Hace una simulación recursiva hasta el último valor t (no quedan números aleatorios)
 # inputs:  simular(
 # valor: valor a proyectar hacia el futuro,
 # deltat: tiempo de proyección,
@@ -21,19 +21,21 @@ def simular(valor,deltat,r,sigma,restantes): # Hace una simulación recursiva ha
 # sigma: desviación estandar r_j
 # restantes: lista con valores aleatorios de una distribución normal
 #)
+def simular(valor,deltat,r,sigma,restantes):
     if len(restantes) == 0:
         return valor
     eps, restantes = restantes[0],restantes[1:] # consigue el primer valor y los saca de la siguiente iteración
     valor = valor + r*valor*deltat + valor*sigma*eps*np.sqrt(deltat) #Cálculo siguiente valor
     return simular(valor,deltat,r,sigma,restantes) #siguiente iteración
 
-def get_rsigma(list): #consigue la desviación estandar de los r_j para una lista de valores de clausura
+#consigue la desviación estandar de los r_j para una lista de valores de clausura
+def get_rsigma(list):
     rlist = []
     for i in range(1,len(list)):
         rlist.append(np.log(list[i]/list[i-1]))
     return np.std(np.array(rlist))
 
-def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf): #Consigue el valor de una opcion
+#Consigue el valor de una opcion
 # inputs: get_opc_compra(
 # sval: valor inicial de cada simulación,
 # T_num: Tmayús como número con respecto a 1 año = 1,
@@ -42,6 +44,7 @@ def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf): #Consigue el valor de una o
 # sd: desviación estandar r_j
 # val_inf: valor de inferencia (exprimentación)
 #)
+def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf):
     tot = 0
     s_T = 0
     for i in range(0,5000): #iteracion para hacer 5000 simulaciones

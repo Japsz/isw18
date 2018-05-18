@@ -1,18 +1,43 @@
-
-<div class="panel-body">
-    <h5>$OdC para el intervalo: <%= opc%></h5>
-    <h5>$Valor futuro promedio: <%= prom%></h5>
+<div class="container">
+  <br>
+  <%
+  if(data.length < 5){
+  %>
+  <table class="table table-bordered">
+      <tr class="success">
+          <th>Date</th>
+          <th>Open</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Close</th>
+          <th>Adjusted Close</th>
+          <th>Volume</th>
+      </tr>
+      <%for(var i = 0; i<data.length; i++){
+          data[i] = data[i].split(",");%>
+      <tr>
+          <td><%= data[i][0]%></td>
+          <td><%= data[i][1]%></td>
+          <td><%= data[i][2]%></td>
+          <td><%= data[i][3]%></td>
+          <td><%= data[i][4]%></td>
+          <td><%= data[i][5]%></td>
+          <td><%= data[i][6]%></td>
+      </tr>
+      <%}}%>
+  </table>
 </div>
+
+<!-- Parametros para simulaciones -->
 <div id="form_opc">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <form id="buq_opc">
+            <form id="busq_opc">
                 <div class="row">
                     <div class="form-group col-sm-4" style="width:30%">
                         <label for="valor_contrato"><h5>Valor a Futuro por Contrato</h5></label>
                         <input type="number" class="form-control" name="valor_contrato" min="0" required>
                     </div>
-                    <input type="hidden" class="form-control" name="prom" value=<%= prom%>>
                     <div class="form-group col-sm-4" style="width:30%">
                         <label for="eleccion"><h5>Vende o Compra Acción</h5></label>
                         <select name="eleccion" class="form-control" id="symselect" required>
@@ -27,32 +52,6 @@
         </div>
     </div>
 </div>
-<table class="table table-responsive">
-    <thead>
-    <tr>
-        <th>Date</th>
-        <th>Open</th>
-        <th>High</th>
-        <th>Low</th>
-        <th>Close</th>
-        <th>Adjusted Close</th>
-        <th>Volume</th>
-    </tr>
-    <tbody id="stock_rows">
-    <% for(var i = 0;i<data.length - 1  ;i++){
-        data[i] = data[i].split(",");%>
-    <tr>
-        <td><%= data[i][0]%></td>
-        <td><%= data[i][1]%></td>
-        <td><%= data[i][2]%></td>
-        <td><%= data[i][3]%></td>
-        <td><%= data[i][4]%></td>
-        <td><%= data[i][5]%></td>
-        <td><%= data[i][6]%></td>
-    </tr>
-    <%}%>
-    </tbody>
-</table>
 
 <script>
 $("#busq_opc").submit(function(e){

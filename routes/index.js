@@ -4,9 +4,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: '' });
 });
+
 router.post('/get_quote',function(req, res, next){
     var PythonShell = require('python-shell');
     var pyshell = new PythonShell('/python/tests/test_yqd.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
@@ -25,6 +25,7 @@ router.post('/get_quote',function(req, res, next){
                     texto.push(message);
                     break;
                 case "sd":
+                    console.log("sigma:");
                     console.log(message);
                     break;
                 case "opc":
@@ -51,21 +52,19 @@ router.post('/get_quote',function(req, res, next){
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-        console.log(opc_val);
+        console.log(texto);
         res.render('stock_rows',{data: texto,sd:sd,opc:opc_val,prom:valor_prom});
 
     });
-
-
 });
 
-router.get('/get_option',function(req, res, next){
+router.post('/get_actions',function(req, res, next){
     var PythonShell = require('python-shell');
-    var pyshell = new PythonShell('/python/tests/option.py',{args:[req.body.valor_contrato,req.body.prom,req.body.eleccion]});
-    var texto = [];
+    var pyshell = new PythonShell('/python/tests/actions.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
+    var acciones = [];
 // sends a message to the Python script via stdin
     pyshell.on('message', function (message) {
-        texto.push(message);
+        acciones.push(message);
         // received a message sent from the Python script (a simple "print" statement)
     });
 
@@ -74,15 +73,14 @@ router.get('/get_option',function(req, res, next){
         if (err){
           console.log("Python Error: %s",err);
           console.log(signal);
-          res.send("ERROR");
+          res.send("ERROR"); //NOTA: Intentar retornar sin errores
           return;
         }
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-        console.log(texto);
-        res.render('value_option',{data: texto});
-
+        console.log(acciones);
+        res.render('stock_rows',{data: acciones});
     });
 });
 

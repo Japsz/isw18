@@ -30,32 +30,8 @@
   <div id="chart_div"></div>
 </div>
 
-<!-- Parametros para simulaciones -->
-<div id="form_opc">
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <form id="busq_opc">
-                <div class="row">
-                    <div class="form-group col-sm-4" style="width:30%">
-                        <label for="valor_contrato"><h5>Valor a Futuro por Contrato</h5></label>
-                        <input type="number" class="form-control" name="valor_contrato" min="0" required>
-                    </div>
-                    <div class="form-group col-sm-4" style="width:30%">
-                        <label for="eleccion"><h5>Vende o Compra Acción</h5></label>
-                        <select name="eleccion" class="form-control" id="symselect" required>
-                          <option value="#" disabled selected>Elegir vender o comprar</option>
-                          <option value="compra">Comprar</option>
-                          <option value="vende">Vender</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-submit" style="margin-left:5px;margin-top:30px" id="fsubmit2"><span style="height:40px">Enviar</span></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <script>
+  //Grafico
   var valores = [];
   var data = "<%= JSON.stringify(data) %>";
   data = data.replace(/\&#34;/g,"'").replace(/\['/g,"").replace(/\']/g,"");
@@ -91,5 +67,6 @@
     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     chart.draw(grafico, options);
   }
+
 </script>
 

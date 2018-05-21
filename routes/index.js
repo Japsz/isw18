@@ -7,6 +7,37 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: '' });
 });
 
+router.post('/get_actions',function(req, res, next){
+    var PythonShell = require('python-shell');
+    var pyshell = new PythonShell('/python/tests/actions.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
+    var acciones = [];
+// sends a message to the Python script via stdin
+    pyshell.on('message', function (message) {
+        acciones.push(message);
+        // received a message sent from the Python script (a simple "print" statement)
+    });
+
+// end the input stream and allow the process to exit
+    pyshell.end(function (err,code,signal) {
+        if (err){
+          console.log("Python Error: %s",err);
+          console.log(signal);
+          res.send("ERROR"); //NOTA: Intentar retornar sin errores
+          return;
+        }
+        console.log('The exit code was: ' + code);
+        console.log('The exit signal was: ' + signal);
+        console.log('finished');
+        console.log(acciones);
+        res.render('stock_rows',{data: acciones});
+    });
+});
+
+router.post('/get_option',function(req,res,next){
+    option = 0;
+    res.render('value_option',{data: option});
+});
+
 router.post('/get_quote',function(req, res, next){
     var PythonShell = require('python-shell');
     var pyshell = new PythonShell('/python/tests/test_yqd.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
@@ -55,32 +86,6 @@ router.post('/get_quote',function(req, res, next){
         console.log(texto);
         res.render('stock_rows',{data: texto,sd:sd,opc:opc_val,prom:valor_prom});
 
-    });
-});
-
-router.post('/get_actions',function(req, res, next){
-    var PythonShell = require('python-shell');
-    var pyshell = new PythonShell('/python/tests/actions.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
-    var acciones = [];
-// sends a message to the Python script via stdin
-    pyshell.on('message', function (message) {
-        acciones.push(message);
-        // received a message sent from the Python script (a simple "print" statement)
-    });
-
-// end the input stream and allow the process to exit
-    pyshell.end(function (err,code,signal) {
-        if (err){
-          console.log("Python Error: %s",err);
-          console.log(signal);
-          res.send("ERROR"); //NOTA: Intentar retornar sin errores
-          return;
-        }
-        console.log('The exit code was: ' + code);
-        console.log('The exit signal was: ' + signal);
-        console.log('finished');
-        console.log(acciones);
-        res.render('stock_rows',{data: acciones});
     });
 });
 

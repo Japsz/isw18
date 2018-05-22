@@ -27,16 +27,20 @@ get_sigma <- function(list){
 
 
 get_buyop <- function(sval, T_num, n_intrv, r, sd, val_inf){
-	tot = 0.0
+	simuls = 1000
+	simvalu = c()
+	total = 0.0
 	s_T = 0.0
-	for(i in 1:100){
-		var = simulate(sval, T_num/n_intrv, r*T_num, sd, rnorm(1000))
-		tot = tot + max(c(0,var-val_inf))
+	for(i in 1:simuls){
+		var = simulate(sval, T_num/n_intrv, r*T_num, sd, rnorm(simuls))
+		simvalu = c(simvalu,var)
+		total = total + max(c(0,var-val_inf))
 		s_T = s_T + var
 	}
-	tot = tot/5000
-	s_T = s_T/5000
-	return(exp(-1*r*T_num)*tot)
+	total = total/simuls
+	s_T = s_T/simuls
+	plot(simvalu,type="l")
+	return(exp(-1*r*T_num)*total)
 }
 
 

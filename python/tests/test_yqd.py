@@ -44,10 +44,10 @@ def get_rsigma(list):
 # sd: desviación estandar r_j
 # val_inf: valor de inferencia (exprimentación)
 #)
-def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf):
+def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf,n_sims):
     tot = 0
     s_T = 0
-    for i in range(0,5000): #iteracion para hacer 5000 simulaciones
+    for i in range(0,n_sims): #iteracion para hacer 5000 simulaciones
         var = simular(sval,T_num/n_intrv,r*T_num,sd,np.random.normal(0,1,n_intrv)) #entrega el último valor observado tras la simulación
         tot += np.amax([0,var-val_inf]) # para obtener esperanza de fi
         s_T += var # para obtener valor final promedio de la simulación
@@ -58,23 +58,14 @@ def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf):
     return ((np.e)**(-1*r*T_num))*tot #retorna F(val_inf,0)
 
 
-def test(ticker,desde,hasta):
-    # Download quote for stocks
-    clarray = []
-    for string in load_quote(ticker,desde,hasta): #parseo
-        print(string)
-        array = string.split(",")
-        clarray.append(float(array[4]))
-    sd = get_rsigma(clarray) # se consigue sigma
-    print("sd@@sd") #intercambio con node
-    print(sd)
-    n_intrv = 512 # la simulación tendra "n_intrv" pasos
-    T_num = float(len(clarray)/365) # valor Tmayús con respecto 1 = 1 año
-    opc_value = get_opc_compra(clarray[-1],T_num,n_intrv,0.0206,sd,clarray[-1])# se avalúa siendo usando el último valor histórico como valor de inferencia/experimentación
+def test(r,ej_price,T_num,n_sims,n_intrv,s_val,sd):
+    # la simulación tendra "n_intrv" pasos
+    # valor Tmayús con respecto 1 = 1 año
+    opc_value = get_opc_compra(float(s_val),float(T_num),int(n_intrv),float(r),float(sd),float(ej_price),int(n_sims))# se avalúa siendo usando el último valor histórico como valor de inferencia/experimentación
     print("opc@@opc") #intercambio con node
     print(opc_value)
 
 
 if __name__ == '__main__':
-	test(sys.argv[1],sys.argv[2],sys.argv[3])
+	test(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6],sys.argv[7])
 

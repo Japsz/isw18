@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: '' });
@@ -9,13 +10,24 @@ router.get('/', function(req, res, next) {
 
 router.post('/get_actions',function(req, res, next){
     var PythonShell = require('python-shell');
+    var R = require('js-call-r');
     var pyshell = new PythonShell('/python/tests/actions.py',{args:[req.body.symbol,req.body.desde.replace(/\-/g,""),req.body.hasta.replace(/\-/g,"")]});
-    var acciones = [];
+    var filename = null;
+    var out;
+    var actions = [];
+    console.log('aca?');
 // sends a message to the Python script via stdin
-    pyshell.on('message', function (message) {
-        acciones.push(message);
-        // received a message sent from the Python script (a simple "print" statement)
+    pyshell.on('message', function (message){
+        if(filename == null){
+            filename = message
+        }
+        else{
+            console.log(message)
+            actions.push(message);
+        }
+        // received a message sent from the Python script (a simple "print" statement) 
     });
+    
 
 // end the input stream and allow the process to exit
     pyshell.end(function (err,code,signal) {
@@ -25,12 +37,14 @@ router.post('/get_actions',function(req, res, next){
           res.send("ERROR"); //NOTA: Intentar retornar sin errores
           return;
         }
+        //var result = R.callSync('./option.R',{a: filename});
+        console.log(filename)
+        //Llamada a un Script R - Calcular $Opcion
         console.log('The exit code was: ' + code);
         console.log('The exit signal was: ' + signal);
         console.log('finished');
-        console.log(acciones);
-        res.render('stock_rows',{data: acciones});
-    });
+        res.render('stock_rows', {data: actions});
+    }); 
 });
 
 router.post('/get_option',function(req,res,next){

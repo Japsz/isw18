@@ -100,3 +100,17 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
 
     });
 }
+
+function get_opc_val_r(t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd){
+    const rscript = require('js-call-r');
+    const result = rscript.callSync('./R/option.R', {
+        r: t_riesgo,
+        ej_price: p_ejercicio,
+        T_num: t_mad,
+        n_sims: simulaciones,
+        n_intrv: intervalo,
+        s_val: s_val,
+        sd: sd
+    });
+    $("#value_option").html(result.result);
+}

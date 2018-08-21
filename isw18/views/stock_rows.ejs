@@ -73,14 +73,7 @@
             data[array[i]['name']] = array[i]['value'];
         }
         if(data.tipo){
-            $.ajax({
-                type: 'post',
-                data: data,
-                url: '/get_option',
-                success: function(data){
-                    $("#value_option").html(data);
-                }
-            });
+            get_opc_val(data.t_riesgo,data.p_ejercicio,data.t_mad,data.simulaciones,data.intervalo,data.s_val,data.sd);
         }
     });
 

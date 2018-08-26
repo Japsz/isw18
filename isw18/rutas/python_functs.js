@@ -1,5 +1,7 @@
 var ejs = require("ejs");
 var PythonShell = require('python-shell');
+var fs = require('fs');
+var csv = require('fast-csv');
 function buscar(simbolo,desde,hasta){
     var pyshell = new PythonShell('/python/tests/actions.py',{args:[simbolo,desde.replace(/\-/g,""),hasta.replace(/\-/g,"")]});
     var acciones = [];
@@ -113,4 +115,58 @@ function get_opc_val_r(t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,s
         sd: sd
     });
     $("#value_option").html(result.result);
+}
+
+function parse_csv(ruta){
+    var first = -1;
+    var anterior;
+    var acciones =[];
+    var auxlist = [];
+    var stream = fs.createReadStream(ruta);
+    var piper = csv.parse()
+        .on('data', function (chunk) {
+            if(first > 0){
+                acciones.push(chunk[0] + "," + chunk[1] + "," + chunk[2] + "," + chunk[3] + "," + chunk[4] + "," + chunk[5] + "," + chunk[6]);
+                auxlist.push(Math.log(parseFloat(chunk[chunk.length - 2]))/Math.log(anterior));
+            } else if (first == 0) acciones.push(chunk[0] + "," + chunk[1] + "," + chunk[2] + "," + chunk[3] + "," + chunk[4] + "," + chunk[5] + "," + chunk[6]);
+            first += 1;
+            anterior = parseFloat(chunk[chunk.length - 2]);
+
+        })
+        .on('end', function (data) {
+            ejs.renderFile("./views/stock_rows.ejs", {data: acciones,maxdays: data - 1,sd:get_std(auxlist),s_val:anterior}, function(err, str){
+                // str => Rendered HTML string
+                if(err){
+
+                   $("#stock_rows").html(err);
+                    return 0;
+                }
+                $("#stock_rows").html(str);
+                return 1;
+            });
+        });
+    stream.pipe(piper);
+}
+function get_std(values){
+    var avg = average(values);
+
+    var squareDiffs = values.map(function(value){
+        var diff = value - avg;
+        var sqrDiff = diff * diff;
+        return sqrDiff;
+    });
+
+    var avgSquareDiff = average(squareDiffs);
+
+    var stdDev = Math.sqrt(avgSquareDiff);
+    return stdDev;
+}
+
+function average(data){
+    var sum = data.reduce(function(sum, value){
+        return sum + value;
+    }, 0);
+
+    var avg = sum / data.length;
+    return avg;
 }

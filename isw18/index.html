@@ -77,6 +77,7 @@
                   <option value="AAPL" selected>AAPL</option>
                   <option value="ADRA">ADRA</option>
                   <option value="TWX">TWX</option>
+                  <option value="GOOGL">GOOGL</option>
                 </select>
               </div>
               <div class="form-group" >
@@ -84,7 +85,10 @@
                 <input type="date" class="form-control" name="desde" style="width:32%" required value="2018-03-25">
                 <label for="hasta"><h5>Hasta</h5></label>
                 <input type="date" class="form-control" name="hasta" style="width:32%"  required>
-                <button type="submit" class="btn btn" style="margin-left:5px; background-color:#428bca" id="fsubmit"><i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></i></button>
+                <button type="submit" class="btn btn-primary" style="margin-left:5px; background-color:#428bca" id="fsubmit"><span class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></span></button>
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-success" id="csv"><span class="glyphicon glyphicon-upload"></span> Csv</button>
               </div>
             </div>
           </form>
@@ -101,7 +105,10 @@
   <!--/ container -->
 </div>
 <script type="text/javascript">
-
+  $("#csv").click(function (e){
+     parse_csv("./R/GOOGL.csv")
+  });
+  $(window).on
   $("#busq_stock").submit(function(e){
       e.preventDefault();
       var array = $(this).serializeArray();
@@ -113,7 +120,6 @@
       $("#loader").removeClass("").addClass("loader col-md-offset-6");
       buscar(data.symbol,data.desde,data.hasta);
   });
-
 
 </script>
 

@@ -16,6 +16,8 @@
   <script src="/assets/js/libs/jquery-1.10.0.js"></script>
   <script src="/assets/js/libs/jquery-ui.min.js"></script>
   <script src="/assets/js/libs/bootstrap.min.js"></script>
+  <script src="/rutas/python_functs.js"></script>
+
 
   <!-- Google chart para graficos -->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -61,110 +63,86 @@
 
 <body>
 <div class="body_wrap">
+  <!-- CONTAINER CARGAR ARCHIVO -->
   <div class="container">
-    <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
-    <div class="col-md-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <!-- FORMULARIO -->
-          <form id="busq_stock">
-            <div class="form-inline">
-              <div class="form-group" style="width:25%">
-                <select name="symbol" class="form-control" id="symselect" required>
-                  <option value="#" disabled>Buscar Símbolo</option>
-                  <option value="AAPL" selected>AAPL</option>
-                  <option value="ADRA">ADRA</option>
-                  <option value="TWX">TWX</option>
-                </select>
+    <div class="row">
+      <!-- Columna para buscar archivos por yahoooooooooooooooooooo -->
+      <div class="col-md-8">
+        <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <!-- FORMULARIO PARA BUSCAR ACCIONES -->
+            <form id="busq_stock">
+              <div class="form-inline">
+                <div class="form-group" style="width:25%">
+                  <select name="symbol" class="form-control" id="symselect" required>
+                    <option value="#" disabled>Buscar Símbolo</option>
+                    <option value="AAPL" selected>AAPL</option>
+                    <option value="ADRA">ADRA</option>
+                    <option value="TWX">TWX</option>
+                    <option value="GOOGL">GOOGL</option>
+                  </select>
+                </div>
+                <div class="form-group" >
+                  <label for="desde"><h5>Desde</h5></label>
+                  <input type="date" class="form-control" name="desde" style="width:32%" required value="2018-03-25">
+                  <label for="hasta"><h5>Hasta</h5></label>
+                  <input type="date" class="form-control" name="hasta" style="width:32%"  required>
+                  <button type="submit" class="btn btn-primary" style="margin-left:5px; background-color:#428bca" id="fsubmit"><span class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></span></button>
+                </div>
               </div>
-              <div class="form-group" >
-                <label for="desde"><h5>Desde</h5></label>
-                <input type="date" class="form-control" name="desde" style="width:32%" required value="2018-03-25">
-                <label for="hasta"><h5>Hasta</h5></label>
-                <input type="date" class="form-control" name="hasta" style="width:32%"  required>
-                <button type="submit" class="btn btn" style="margin-left:5px; background-color:#428bca" id="fsubmit"><i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></i></button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-        <div class="row">
-          <div id="estado"></div>
-          <div id="loader" class=""></div>
-        </div>
-        <div id="stock_rows"></div>
+      </div>
 
+      <!-- Columna para cargar archivo -->
+      <div class="col-md-4">
+        <h1 class="page-header" style="color:#FFFFFF">Cargar Acciones</h1>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <!-- FORMULARIO CARGAR ARCHIVO -->
+            <form id="upload-file">
+              <div class="row">
+                <div class="col-md-9" style="padding: 12px">
+                  <input type="file" class="form-control" id="inpfile" accept=".csv">
+                </div>
+                <div class="col-md-1">
+                  <i class="glyphicon glyphicon-upload" style="margin: 0;padding: 8px;font-size:30px;text-shadow:2px 2px 4px #000000"></i>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <!--/ container -->
+
+  <!-- Vistas renderizadas -->
+  <div class="container">
+    <div class="col-md-12" style="background-color: white">      
+      <div class="row">
+        <div id="estado"></div>
+        <div id="loader" class=""></div>
+      </div>
+      <div id="stock_rows"></div>
+    </div>
+  </div>
 </div>
 <script type="text/javascript">
-  function buscar(simbolo,desde,hasta){
-      var ejs = require("ejs");
-      var PythonShell = require('python-shell');
-      var pyshell = new PythonShell('/python/tests/actions.py',{args:[simbolo,desde.replace(/\-/g,""),hasta.replace(/\-/g,"")]});
-      var acciones = [];
-      var caso = "texto";
-      var sd,s_val;
-      var maxdays = (new Date(hasta).getTime() - new Date(desde).getTime())/(1000*60*60*24);
-      // sends a message to the Python script via stdin
-      pyshell.on('message', function (message) {
-        if(message.split("@@").length > 1){
-            caso = message.split("@@")[0];
-        }else {
-            switch(caso){
-                case "texto":
-                    acciones.push(message);
-                    break;
-                case "sd":
-                    console.log("sigma:");
-                    sd = parseFloat(message);
-                    break;
-                case "s_T":
-                    s_val = parseFloat(message);
-                    break;
-                default:
-                    break;
-            }
+  $("#csv").click(function (e){
+     parse_csv("./R/GOOGL.csv")
+  });
+  function readURL(input) {
 
-        }
-        // received a message sent from the Python script (a simple "print" statement)
-    });
-
-// end the input stream and allow the process to exit
-    pyshell.end(function (err,code,signal) {
-        if (err){
-            $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
-            $("#estado").html("");
-            $("#loader").removeClass("loader col-md-offset-6").addClass("");
-            $("#form_option").removeClass("hidden").addClass("");
-            $("#stock_rows").html(err);
-            return 0;
-        }
-        ejs.renderFile("./views/stock_rows.ejs", {data: acciones,maxdays: maxdays,sd:sd,s_val:s_val}, function(err, str){
-            // str => Rendered HTML string
-            if(err){
-                $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
-                $("#estado").html("");
-                $("#loader").removeClass("loader col-md-offset-6").addClass("");
-                $("#form_option").removeClass("hidden").addClass("");
-                $("#stock_rows").html(err);
-                return 0;
-            }
-            $("#fsubmit").html('<i class="glyphicon glyphicon-search" style="margin: 0;padding: 5px; font-size:35px;text-shadow:2px 2px 4px #000000"></i>');
-            $("#estado").html("");
-            $("#loader").removeClass("loader col-md-offset-6").addClass("");
-            $("#form_option").removeClass("hidden").addClass("");
-            $("#stock_rows").html(str);
-            return 1;
-        });
-    });
-
-  }
-
-</script>
-<script type="text/javascript">
-
+      if (input.files && input.files[0]) {
+          parse_csv(input.files[0].path);
+      }
+  };
+  $("#inpfile").change(function() {
+      readURL(this);
+  });
   $("#busq_stock").submit(function(e){
       e.preventDefault();
       var array = $(this).serializeArray();
@@ -176,7 +154,6 @@
       $("#loader").removeClass("").addClass("loader col-md-offset-6");
       buscar(data.symbol,data.desde,data.hasta);
   });
-
 
 </script>
 

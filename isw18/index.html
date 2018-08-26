@@ -63,46 +63,72 @@
 
 <body>
 <div class="body_wrap">
+  <!-- CONTAINER CARGAR ARCHIVO -->
   <div class="container">
-    <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
-    <div class="col-md-12">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <!-- FORMULARIO -->
-          <form id="busq_stock">
-            <div class="form-inline">
-              <div class="form-group" style="width:25%">
-                <select name="symbol" class="form-control" id="symselect" required>
-                  <option value="#" disabled>Buscar Símbolo</option>
-                  <option value="AAPL" selected>AAPL</option>
-                  <option value="ADRA">ADRA</option>
-                  <option value="TWX">TWX</option>
-                  <option value="GOOGL">GOOGL</option>
-                </select>
+    <div class="row">
+      <!-- Columna para buscar archivos por yahoooooooooooooooooooo -->
+      <div class="col-md-8">
+        <h1 class="page-header" style="color:#FFFFFF">Buscar Acciones</h1>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <!-- FORMULARIO PARA BUSCAR ACCIONES -->
+            <form id="busq_stock">
+              <div class="form-inline">
+                <div class="form-group" style="width:25%">
+                  <select name="symbol" class="form-control" id="symselect" required>
+                    <option value="#" disabled>Buscar Símbolo</option>
+                    <option value="AAPL" selected>AAPL</option>
+                    <option value="ADRA">ADRA</option>
+                    <option value="TWX">TWX</option>
+                    <option value="GOOGL">GOOGL</option>
+                  </select>
+                </div>
+                <div class="form-group" >
+                  <label for="desde"><h5>Desde</h5></label>
+                  <input type="date" class="form-control" name="desde" style="width:32%" required value="2018-03-25">
+                  <label for="hasta"><h5>Hasta</h5></label>
+                  <input type="date" class="form-control" name="hasta" style="width:32%"  required>
+                  <button type="submit" class="btn btn-primary" style="margin-left:5px; background-color:#428bca" id="fsubmit"><span class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></span></button>
+                </div>
               </div>
-              <div class="form-group" >
-                <label for="desde"><h5>Desde</h5></label>
-                <input type="date" class="form-control" name="desde" style="width:32%" required value="2018-03-25">
-                <label for="hasta"><h5>Hasta</h5></label>
-                <input type="date" class="form-control" name="hasta" style="width:32%"  required>
-                <button type="submit" class="btn btn-primary" style="margin-left:5px; background-color:#428bca" id="fsubmit"><span class="glyphicon glyphicon-search" style="margin: 0;padding: 5px;font-size:30px;text-shadow:2px 2px 4px #000000"></span></button>
-              </div>
-              <div class="form-group">
-                  <input type="file" id="inpfile">
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-        <div class="row">
-          <div id="estado"></div>
-          <div id="loader" class=""></div>
-        </div>
-        <div id="stock_rows"></div>
+      </div>
 
+      <!-- Columna para cargar archivo -->
+      <div class="col-md-4">
+        <h1 class="page-header" style="color:#FFFFFF">Cargar Acciones</h1>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <!-- FORMULARIO CARGAR ARCHIVO -->
+            <form id="upload-file">
+              <div class="row">
+                <div class="col-md-9" style="padding: 12px">
+                  <input type="file" class="form-control" id="inpfile" accept=".csv">
+                </div>
+                <div class="col-md-1">
+                  <i class="glyphicon glyphicon-upload" style="margin: 0;padding: 8px;font-size:30px;text-shadow:2px 2px 4px #000000"></i>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <!--/ container -->
+
+  <!-- Vistas renderizadas -->
+  <div class="container">
+    <div class="col-md-12" style="background-color: white">      
+      <div class="row">
+        <div id="estado"></div>
+        <div id="loader" class=""></div>
+      </div>
+      <div id="stock_rows"></div>
+    </div>
+  </div>
 </div>
 <script type="text/javascript">
   $("#csv").click(function (e){

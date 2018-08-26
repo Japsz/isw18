@@ -72,9 +72,8 @@
         for(var i = 0;i<array.length;i++){
             data[array[i]['name']] = array[i]['value'];
         }
-        if(data.tipo){
-            get_opc_val(data.t_riesgo,data.p_ejercicio,data.t_mad,data.simulaciones,data.intervalo,data.s_val,data.sd);
-        }
+        get_opc_val(data.t_riesgo,data.p_ejercicio,data.t_mad,data.simulaciones,data.intervalo,data.s_val,data.sd);
+
     });
 
     //Grafico

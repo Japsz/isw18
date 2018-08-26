@@ -1,1 +1,0 @@
-yahoo_quote_download

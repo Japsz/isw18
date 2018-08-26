@@ -2,6 +2,7 @@ var ejs = require("ejs");
 var PythonShell = require('python-shell');
 var fs = require('fs');
 var csv = require('fast-csv');
+
 function buscar(simbolo,desde,hasta){
     var pyshell = new PythonShell('/python/tests/actions.py',{args:[simbolo,desde.replace(/\-/g,""),hasta.replace(/\-/g,"")]});
     var acciones = [];
@@ -65,14 +66,17 @@ function buscar(simbolo,desde,hasta){
 
 function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd){
     var pyshell = new PythonShell('/python/tests/test_yqd.py',{args:[parseFloat(t_riesgo),parseFloat(p_ejercicio),parseInt(t_mad)/365,parseInt(simulaciones),parseInt(intervalo),parseFloat(s_val),parseFloat(sd)]});
-    var caso,valor_prom,opc_val;
+    var caso,valor_prom,opc_val_c,opc_val_v;
     pyshell.on('message', function (message) {
         if(message.split("@@").length > 1){
             caso = message.split("@@")[0];
         }else{
             switch(caso){
                 case "opc":
-                    opc_val = parseFloat(message);
+                    opc_val_c = parseFloat(message);
+                    break;
+                case "opv":
+                    opc_val_v = parseFloat(message);
                     break;
                 case "s_T":
                     valor_prom = parseFloat(message);
@@ -90,7 +94,7 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
             $("#value_option").html(err);
             return 0;
         }
-        ejs.renderFile("./views/value_option.ejs", {data: opc_val}, function(err, str){
+        ejs.renderFile("./views/value_option.ejs", {data: [opc_val_c,opc_val_v]}, function(err, str){
             // str => Rendered HTML string
             if(err){
                 $("#value_option").html(err);
@@ -105,7 +109,7 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
 
 function get_opc_val_r(t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd){
     const rscript = require('js-call-r');
-    const result = rscript.callSync('./R/option.R', {
+    rscript.call('./R/option.R', {
         r: t_riesgo,
         ej_price: p_ejercicio,
         T_num: t_mad,
@@ -113,8 +117,16 @@ function get_opc_val_r(t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,s
         n_intrv: intervalo,
         s_val: s_val,
         sd: sd
+    }).then((result) => {
+
+            $("#value_option").html(result.result);
+            return 1;
+    })
+    .catch(err => {
+            $("#value_option").html(err);
+            return 0;
     });
-    $("#value_option").html(result.result);
+    return 1;
 }
 
 function parse_csv(ruta){
@@ -127,7 +139,7 @@ function parse_csv(ruta){
         .on('data', function (chunk) {
             if(first > 0){
                 acciones.push(chunk[0] + "," + chunk[1] + "," + chunk[2] + "," + chunk[3] + "," + chunk[4] + "," + chunk[5] + "," + chunk[6]);
-                auxlist.push(Math.log(parseFloat(chunk[chunk.length - 2]))/Math.log(anterior));
+                auxlist.push(Math.log(parseFloat(chunk[chunk.length - 2])/anterior));
             } else if (first == 0) acciones.push(chunk[0] + "," + chunk[1] + "," + chunk[2] + "," + chunk[3] + "," + chunk[4] + "," + chunk[5] + "," + chunk[6]);
             first += 1;
             anterior = parseFloat(chunk[chunk.length - 2]);

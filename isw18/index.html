@@ -134,15 +134,17 @@
   $("#csv").click(function (e){
      parse_csv("./R/GOOGL.csv")
   });
-  function readURL(input) {
 
+  function readURL(input) {
       if (input.files && input.files[0]) {
           parse_csv(input.files[0].path);
       }
   };
+
   $("#inpfile").change(function() {
       readURL(this);
   });
+  
   $("#busq_stock").submit(function(e){
       e.preventDefault();
       var array = $(this).serializeArray();

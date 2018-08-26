@@ -73,7 +73,8 @@ main <- function(){
 	n_sims = as.numeric(json$n_sims)
 
 	opc_value = get_buyop(s_val,ej_price,T_num,n_sims,n_intrv,r,sd)
-	print(toJSON(opc_value))
+	output <- list(result = opc_value)
+	print(toJSON(output))
 	return()
 }
 

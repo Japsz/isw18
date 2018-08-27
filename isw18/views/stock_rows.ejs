@@ -1,0 +1,112 @@
+<div class="container">
+  <br>
+  <%
+  if(data.length < 5){
+  %>
+  <table class="table table-bordered">
+      <tr class="success">
+          <th>Date</th>
+          <th>Open</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Close</th>
+          <th>Adjusted Close</th>
+          <th>Volume</th>
+      </tr>
+      <%for(var i = 0; i<data.length; i++){
+          data[i] = data[i].split(",");%>
+      <tr>
+          <td><%= data[i][0]%></td>
+          <td><%= data[i][1]%></td>
+          <td><%= data[i][2]%></td>
+          <td><%= data[i][3]%></td>
+          <td><%= data[i][4]%></td>
+          <td><%= data[i][5]%></td>
+          <td><%= data[i][6]%></td> 
+      </tr>
+      <%}%>
+      </table>
+  <%}%>
+  <div id="chart_div" style="width:90%"></div>
+</div>
+<div id="form_option" class="panel-footer">
+    <!-- Parametros para simulaciones -->
+    <h2>Detalles de la simulación</h2>
+    <form id="busq_option">
+        <div class="row">
+            <input type="hidden" value="<%= sd%>" name="sd">
+            <input type="hidden" value="<%= s_val%>" name="s_val">
+            <div class="form-group col-sm-4">
+                <label for="t_riesgo"><h5>Tasa libre de riesgo</h5></label>
+                <input type="number" step="any" class="form-control" name="t_riesgo" min="0" required>
+                <label for="p_ejercicio"><h5>Precio ejercicio</h5></label>
+                <input type="number" step="any" class="form-control" name="p_ejercicio" min="0" required>
+                <label for="t_mad"><h5>Tiempo de maduración (en días)</h5></label>
+                <input type="number" step="any" class="form-control" min="0" max="<%= maxdays %>" name="t_mad" min="0" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="simulaciones"><h5>N° Simulaciones/trayectorias</h5></label>
+                <input type="number" class="form-control" name="simulaciones" min="0" required>
+                <label for="intervalo"><h5>N° de puntos/intervalos</h5></label>
+                <input type="number" step="any" class="form-control" name="intervalo" min="0" required>
+                <label for="tipo"><h5>Tipo de opción</h5></label>
+            </div>
+            <button type="submit" class="btn btn-submit" style="margin-left:5px;margin-top:30px" id="fsubmit2"><span style="height:40px">Enviar</span></button>
+        </div>
+    </form>
+</div>
+<div id="value_option"></div>
+
+<script>
+    //Envío de detalles por simulacion
+    $("#busq_option").submit(function(e){
+        e.preventDefault();
+        var array = $(this).serializeArray();
+        var data = {};
+        console.log(array);
+        for(var i = 0;i<array.length;i++){
+            data[array[i]['name']] = array[i]['value'];
+        }
+        get_opc_val(data.t_riesgo,data.p_ejercicio,data.t_mad,data.simulaciones,data.intervalo,data.s_val,data.sd);
+
+    });
+
+    //Grafico
+  var valores = [];
+  var data = "<%= JSON.stringify(data) %>";
+  data = data.replace(/\&#34;/g,"'").replace(/\['/g,"").replace(/\']/g,"");
+  data = data.split("','");
+  console.log(data);
+  for(var i=0; i< data.length; i++){
+    data[i] = data[i].split(",");
+    fecha = new Date(data[i][0]);
+    valores[i] = new Array(fecha,parseFloat(data[i][4]));
+  }
+
+  google.charts.load('current', {packages: ['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var grafico = new google.visualization.DataTable();
+    grafico.addColumn('date', 'Time of Day');
+    grafico.addColumn('number', 'Accion');
+    grafico.addRows(valores);
+
+  var options = {
+    title: 'Grafica de Acciones',
+    hAxis: {
+      title: 'Fecha',
+      format:'d/MM/yy',
+      slantedText: true
+    },
+    vAxis: {
+      title: 'Accion'
+    }
+  };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(grafico, options);
+  }
+
+</script>
+

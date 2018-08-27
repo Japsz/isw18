@@ -20,6 +20,7 @@ def simular(valor,deltat,r,sigma,restantes):
         return valor
     eps, restantes = restantes[0],restantes[1:] # consigue el primer valor y los saca de la siguiente iteración
     valor = valor + r*valor*deltat + valor*sigma*eps*np.sqrt(deltat) #Cálculo siguiente valor
+    print(valor)
     return simular(valor,deltat,r,sigma,restantes) #siguiente iteración
 
 #consigue la desviación estandar de los r_j para una lista de valores de clausura
@@ -42,14 +43,16 @@ def get_opc_compra(sval,T_num,n_intrv,r,sd,val_inf,n_sims):
     tot_c = 0
     tot_v = 0
     s_T = 0
+    print("sims@@sims")
     for i in range(0,n_sims): #iteracion para hacer 5000 simulaciones
         var = simular(sval,T_num/n_intrv,r*T_num,sd,np.random.normal(0,1,n_intrv)) #entrega el último valor observado tras la simulación
         tot_c += np.amax([0,var - val_inf]) # para obtener esperanza de fi
         tot_v += np.amax([0,val_inf - var]) # para obtener esperanza de fi
         s_T += var # para obtener valor final promedio de la simulación
-    tot_c = tot_c/5000 #esperanza fi
-    tot_v = tot_v/5000 #esperanza fi
-    s_T = s_T/5000 #vfprom
+        print("simfin@@fin")
+    tot_c = tot_c/n_sims #esperanza fi
+    tot_v = tot_v/n_sims #esperanza fi
+    s_T = s_T/n_sims #vfprom
     print("s_T@@var")#intercambio con node
     print(s_T)
     return (((np.e)**(-1*r*T_num))*tot_c,((np.e)**(-1*r*T_num))*tot_v) #retorna F(val_inf,0)

@@ -3,7 +3,43 @@
         <h3>Resultados Simulación</h3>
     </div>
     <div class="panel-body">
-        <h1>Compra: <%= data[0]%></h1>
-        <h1>Venta: <%= data[1]%></h1>
+        <h1>Compra: <strong><%= data[0]%></strong> || Venta: <strong><%= data[1]%></strong></h1>
+        <div id="sims_div"></div>
     </div>
 </div>
+<script>
+    var valores = [
+      <% var suma = 0;
+      for(var i = 0;i<sims[0].length;i++){
+        for(var j = 0;j<sims.length;j++) {
+            suma += sims[j][i];
+        }
+        suma = suma/sims.length;
+            %>
+        [<%= i + 1%>,<%=suma%>]<% if(i + 1 != sims[0].length){%>,<%}%>
+      <% sum = 0;
+      }%>
+    ];
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(drawChart2);
+
+    function drawChart2() {
+        var grafico = new google.visualization.DataTable();
+        grafico.addColumn('number', 'Promedio de Simulaciones');
+        grafico.addColumn('number', 'Promedio de Simulaciones2');
+        grafico.addRows(valores);
+
+        var options = {
+            title: 'Grafica de simulaciones',
+            hAxis: {
+                title: 'Intervalo'
+            },
+            vAxis: {
+                title: 'Precio'
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('sims_div'));
+        chart.draw(grafico, options);
+    }
+</script>

@@ -67,9 +67,16 @@ function buscar(simbolo,desde,hasta){
 function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd){
     var pyshell = new PythonShell('/python/tests/test_yqd.py',{args:[parseFloat(t_riesgo),parseFloat(p_ejercicio),parseInt(t_mad)/365,parseInt(simulaciones),parseInt(intervalo),parseFloat(s_val),parseFloat(sd)]});
     var caso,valor_prom,opc_val_c,opc_val_v;
+    var aux = [];
+    var sims = [];
     pyshell.on('message', function (message) {
         if(message.split("@@").length > 1){
             caso = message.split("@@")[0];
+            if(caso == "simfin"){
+                sims.push(aux);
+                aux =[];
+                caso = "sims";
+            }
         }else{
             switch(caso){
                 case "opc":
@@ -80,6 +87,9 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
                     break;
                 case "s_T":
                     valor_prom = parseFloat(message);
+                    break;
+                case "sims":
+                    aux.push(parseFloat(message));
                     break;
                 default:
                     break;
@@ -94,7 +104,7 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
             $("#value_option").html(err);
             return 0;
         }
-        ejs.renderFile("./views/value_option.ejs", {data: [opc_val_c,opc_val_v]}, function(err, str){
+        ejs.renderFile("./views/value_option.ejs", {data: [opc_val_c,opc_val_v],sims:sims}, function(err, str){
             // str => Rendered HTML string
             if(err){
                 $("#value_option").html(err);
@@ -105,28 +115,6 @@ function get_opc_val (t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd
         });
 
     });
-}
-
-function get_opc_val_r(t_riesgo,p_ejercicio,t_mad,simulaciones,intervalo,s_val,sd){
-    const rscript = require('js-call-r');
-    rscript.call('./R/option.R', {
-        r: t_riesgo,
-        ej_price: p_ejercicio,
-        T_num: t_mad,
-        n_sims: simulaciones,
-        n_intrv: intervalo,
-        s_val: s_val,
-        sd: sd
-    }).then((result) => {
-
-            $("#value_option").html(result.result);
-            return 1;
-    })
-    .catch(err => {
-            $("#value_option").html(err);
-            return 0;
-    });
-    return 1;
 }
 
 function parse_csv(ruta){

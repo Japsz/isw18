@@ -1,7 +1,8 @@
 Requerimientos
 NodeJS y librerias asociadas
-Python 3.7
+Python 3.x y NumPy instalado
+Conexión a internet (Gráficos y búsqueda
 
-en cmd ingresar 
->>python setup.py build
->>python setup.py install
+Ejecutar NW.exe para testear.
+
+
